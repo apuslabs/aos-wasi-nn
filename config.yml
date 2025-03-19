@@ -1,0 +1,4 @@
+stack_size: 1048576000
+initial_memory: 1258291200
+maximum_memory: 10485760000
+target: 64

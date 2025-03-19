@@ -1,0 +1,12 @@
+node_modules
+.cache/
+.vscode/
+
+build/llamacpp
+libs
+models
+
+**/*.so
+**/*.wasm
+
+*wallet.json
