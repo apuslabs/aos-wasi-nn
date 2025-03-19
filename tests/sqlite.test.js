@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import * as assert from "node:assert";
 import AoLoader from "@permaweb/ao-loader";
-import { options, msg, env } from "./utils";
+import { wasm, options, msg, env } from "./utils.js";
 
 test("create sqlite db, run insert & select", async () => {
   const handle = await AoLoader(wasm("aos-sqlite"), options);

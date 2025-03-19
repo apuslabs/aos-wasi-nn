@@ -9,7 +9,8 @@
       "arweave": "^1.15.5"
   },
   "scripts": {
-    "test": "node --test --experimental-wasm-memory64 llama.test.js"
+    "test:llama": "node --test --experimental-wasm-memory64 llama.test.js",
+    "test:sqlite": "node --test --experimental-wasm-memory64 sqlite.test.js"
   }
 }
   

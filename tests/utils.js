@@ -1,5 +1,4 @@
 import fs from "fs";
-import { Model } from "./llama.test.js";
 import weaveDrive from "./weavedrive.js";
 export const Model = "ISrbGzQot05rs_HKC08O_SmkipYQnqgB1yC3mjZZeEo";
 export const wasm = (name) => fs.readFileSync(`./${name}.wasm`);

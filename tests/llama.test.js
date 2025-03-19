@@ -11,11 +11,10 @@ test("Execute aos-llama", async () => {
   let result = await handle(
     null,
     msg(`
-      local Llama = require(".Llama")
+      local Llama = require("llama")
       io.stderr:write([[Loading model...\n]])
       local result = Llama.load("/data/${Model}")
-      local Llama = require(".Llama")
-      Llama.setPrompt([[${prompt}]])
+      Llama.set_prompt([[${prompt}]])
       io.stderr:write("Prompt set! Running...\\n")
       local str = Llama.run(30)
       print(str)
