@@ -5,15 +5,17 @@ SCRIPT_DIR := $(shell pwd)
 LLAMA_CPP_DIR := $(SCRIPT_DIR)/build/llamacpp
 AO_LLAMA_DIR := $(SCRIPT_DIR)/build/ao-llama
 AO_SQLITE_DIR := $(SCRIPT_DIR)/build/ao-sqlite
+AO_WASINN_DIR := $(SCRIPT_DIR)/build/ao-wasi-nn
 PROCESS_DIR := $(SCRIPT_DIR)/aos/process
 LIBS_DIR := $(PROCESS_DIR)/libs
-AO_IMAGE := p3rmaw3b/ao:0.1.4
+AO_IMAGE := p3rmaw3b/ao:0.1.5
 EMXX_CFLAGS := -sMEMORY64=1 -O3 -msimd128 -fno-rtti -Wno-experimental
 
 local-model-server:
 	docker run --rm -p 3001:80 -v ./models:/usr/share/nginx/html:ro nginx
 
 clean:
+	rm -rf $(SCRIPT_DIR)/libs
 	rm -rf $(LIBS_DIR)
 
 clean-llama:
@@ -91,3 +93,26 @@ build-sqlite: clean
 	# Copy the process module to the test-llm directory
 	cp $(PROCESS_DIR)/process.wasm $(SCRIPT_DIR)/tests/aos-sqlite.wasm
 	
+build-wasi-nn: clean
+	docker run -v $(AO_WASINN_DIR):/ao-wasi-nn $(AO_IMAGE) sh -c \
+		"cd /ao-wasi-nn && ./build.sh"
+	
+	# Copy ao-wasi-nn to the libs directory
+	mkdir -p $(LIBS_DIR)/ao-wasi-nn
+	cp $(AO_WASINN_DIR)/libaowasinn.so $(LIBS_DIR)/ao-wasi-nn/libaowasinn.so
+
+	# Copy libs to script directory
+	cp -r $(LIBS_DIR) $(SCRIPT_DIR)/libs
+
+	# Remove .o files
+	rm -rf $(AO_WASINN_DIR)/*.so
+
+	# Copy config.yml to the process directory
+	cp $(AO_WASINN_DIR)/config.yml $(PROCESS_DIR)/config.yml
+
+	# Build the process module
+	cd $(PROCESS_DIR) && \
+	docker run -e DEBUG=1 --platform linux/amd64 -v ./:/src $(AO_IMAGE) ao-build-module
+
+	# Copy the process module to the test-llm directory
+	cp $(PROCESS_DIR)/process.wasm $(SCRIPT_DIR)/tests/aos-wasi-nn.wasm

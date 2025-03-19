@@ -1,0 +1,8 @@
+stack_size: 1048576000
+initial_memory: 1258291200
+maximum_memory: 10485760000
+target: 64
+extra_compile_args: [
+  "-sERROR_ON_UNDEFINED_SYMBOLS=0",
+  "-sALLOW_UNIMPLEMENTED_SYSCALLS=1"
+]

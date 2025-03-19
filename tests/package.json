@@ -10,7 +10,8 @@
   },
   "scripts": {
     "test:llama": "node --test --experimental-wasm-memory64 llama.test.js",
-    "test:sqlite": "node --test --experimental-wasm-memory64 sqlite.test.js"
+    "test:sqlite": "node --test --experimental-wasm-memory64 sqlite.test.js",
+    "test:wasinn": "node --test --experimental-wasm-memory64 wasi-nn.test.js"
   }
 }
   
