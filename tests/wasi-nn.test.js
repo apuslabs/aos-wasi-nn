@@ -4,7 +4,7 @@ import AoLoader from "@permaweb/ao-loader";
 import { Model, wasm, options, msg, env } from "./utils.js";
 
 const modelPath = `/home/jax/work/WasmEdge-WASINN-examples/wasmedge-ggml/qwen/src/qwen1_5-0_5b-chat-q2_k.gguf`
-const prompt = `Hello, how are you?`;
+const prompt = `<system>you're a copywriter, write after my prompt</system><im_start>Once upon a time</im_end>`;
 
 test("Execute aos-wasi-nn", async () => {
   // Initialize AoLoader with the wasm and options

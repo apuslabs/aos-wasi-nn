@@ -74,7 +74,7 @@ set_input(graph_execution_context ctx, uint32_t index, tensor *tensor);
  */
 __attribute__((import_module("wasi_ephemeral_nn")))
 wasi_nn_error
-compute(graph_execution_context ctx) __attribute__((import_module("wasi_ephemeral_nn")));
+compute(graph_execution_context ctx);
 
 /**
  * @brief Extract the outputs after inference.
@@ -83,14 +83,15 @@ compute(graph_execution_context ctx) __attribute__((import_module("wasi_ephemera
  * @param index                 Output tensor index.
  * @param output_tensor         Buffer where output tensor with index `index` is
  * copied.
- * @param output_tensor_size    Pointer to `output_tensor` maximum size.
+ * @param output_tensor_max_size    Pointer to `output_tensor` maximum size.
  *                              After the function call it is updated with the
  * copied number of bytes.
+ * @param output_tensor_size    Pointer to `output_tensor` size.
  * @return wasi_nn_error                Execution status.
  */
 __attribute__((import_module("wasi_ephemeral_nn")))
 wasi_nn_error
 get_output(graph_execution_context ctx, uint32_t index,
-           tensor_data output_tensor, uint32_t *output_tensor_size);
+           tensor_data output_tensor, uint32_t output_tensor_max_size, uint32_t *output_tensor_size);
 
 #endif

@@ -6,10 +6,6 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /**
  * @brief Graph builder structure for configuring neural network graph
  */
@@ -126,10 +122,10 @@ char* get_result_output(graph_execution_context ctx, uint32_t index);
  * @param input_prompt Input prompt for inference
  * @return char* Result string (caller must free)
  */
-char* run_inference(const char* model_path, const char* input_prompt);
+char *run_inference(const char *model_path, const char *input_prompt);
 
-#ifdef __cplusplus
-}
-#endif
+void logtest(char full_prompt[4096]);
+
+extern int lib_main();
 
 #endif /* WASI_NN_API_H */

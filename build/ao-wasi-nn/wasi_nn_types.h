@@ -9,140 +9,132 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#ifdef __cplusplus
-extern "C"
+/**
+ * ERRORS
+ *
+ */
+
+// sync up with
+// https://github.com/WebAssembly/wasi-nn/blob/main/wit/wasi-nn.wit#L136 Error
+// codes returned by functions in this API.
+typedef enum
 {
-#endif
+    success = 0,
+    invalid_argument,
+    invalid_encoding,
+    missing_memory,
+    busy,
+    runtime_error,
+    unsupported_operation,
+    too_large,
+    not_found,
+    // specified for WasmEdge-wasi-nn
+    end_of_sequence = 100,
+    context_full = 101,
+    prompt_tool_long = 102,
+    model_not_found = 103,
+} wasi_nn_error;
 
-    /**
-     * ERRORS
-     *
-     */
+/**
+ * TENSOR
+ *
+ */
 
-    // sync up with
-    // https://github.com/WebAssembly/wasi-nn/blob/main/wit/wasi-nn.wit#L136 Error
-    // codes returned by functions in this API.
-    typedef enum
-    {
-        success = 0,
-        invalid_argument,
-        invalid_encoding,
-        missing_memory,
-        busy,
-        runtime_error,
-        unsupported_operation,
-        too_large,
-        not_found,
-        // specified for WasmEdge-wasi-nn
-        end_of_sequence = 100,
-        context_full = 101,
-        prompt_tool_long = 102,
-        model_not_found = 103,
-    } wasi_nn_error;
+// The dimensions of a tensor.
+//
+// The array length matches the tensor rank and each element in the array
+// describes the size of each dimension.
+typedef struct
+{
+    uint32_t *buf;
+    uint32_t size;
+} tensor_dimensions;
 
-    /**
-     * TENSOR
-     *
-     */
+typedef enum
+{
+    fp16 = 0,
+    fp32,
+    fp64,
+    bf16,
+    u8,
+    i32,
+    i64
+} tensor_type;
 
-    // The dimensions of a tensor.
-    //
-    // The array length matches the tensor rank and each element in the array
-    // describes the size of each dimension.
-    typedef struct
-    {
-        uint32_t *buf;
-        uint32_t size;
-    } tensor_dimensions;
+// The tensor data.
+//
+// Initially conceived as a sparse representation, each empty cell would be
+// filled with zeros and the array length must match the product of all of the
+// dimensions and the number of bytes in the type (e.g., a 2x2 tensor with
+// 4-byte f32 elements would have a data array of length 16). Naturally, this
+// representation requires some knowledge of how to lay out data in
+// memory--e.g., using row-major ordering--and could perhaps be improved.
+typedef uint8_t *tensor_data;
 
-    typedef enum
-    {
-        fp16 = 0,
-        fp32,
-        fp64,
-        bf16,
-        u8,
-        i32,
-        i64
-    } tensor_type;
+// A tensor.
+typedef struct
+{
+    // Describe the size of the tensor (e.g., 2x2x2x2 -> [2, 2, 2, 2]). To
+    // represent a tensor containing a single value, use `[1]` for the tensor
+    // dimensions.
+    tensor_dimensions *dimensions;
+    // Describe the type of element in the tensor (e.g., f32).
+    tensor_type type;
+    // Contains the tensor data.
+    tensor_data data;
+} tensor;
 
-    // The tensor data.
-    //
-    // Initially conceived as a sparse representation, each empty cell would be
-    // filled with zeros and the array length must match the product of all of the
-    // dimensions and the number of bytes in the type (e.g., a 2x2 tensor with
-    // 4-byte f32 elements would have a data array of length 16). Naturally, this
-    // representation requires some knowledge of how to lay out data in
-    // memory--e.g., using row-major ordering--and could perhaps be improved.
-    typedef uint8_t *tensor_data;
+/**
+ * GRAPH
+ *
+ */
 
-    // A tensor.
-    typedef struct
-    {
-        // Describe the size of the tensor (e.g., 2x2x2x2 -> [2, 2, 2, 2]). To
-        // represent a tensor containing a single value, use `[1]` for the tensor
-        // dimensions.
-        tensor_dimensions *dimensions;
-        // Describe the type of element in the tensor (e.g., f32).
-        tensor_type type;
-        // Contains the tensor data.
-        tensor_data data;
-    } tensor;
+// The graph initialization data.
+//
+// This consists of an array of buffers because implementing backends may encode
+// their graph IR in parts (e.g., OpenVINO stores its IR and weights
+// separately).
+typedef struct
+{
+    uint8_t *buf;
+    uint32_t size;
+} graph_builder;
 
-    /**
-     * GRAPH
-     *
-     */
+typedef struct
+{
+    graph_builder *buf;
+    uint32_t size;
+} graph_builder_array;
 
-    // The graph initialization data.
-    //
-    // This consists of an array of buffers because implementing backends may encode
-    // their graph IR in parts (e.g., OpenVINO stores its IR and weights
-    // separately).
-    typedef struct
-    {
-        uint8_t *buf;
-        uint32_t size;
-    } graph_builder;
+// An execution graph for performing inference (i.e., a model).
+typedef uint32_t graph;
 
-    typedef struct
-    {
-        graph_builder *buf;
-        uint32_t size;
-    } graph_builder_array;
+// sync up with
+// https://github.com/WebAssembly/wasi-nn/blob/main/wit/wasi-nn.wit#L75
+// Describes the encoding of the graph. This allows the API to be implemented by
+// various backends that encode (i.e., serialize) their graph IR with different
+// formats.
+typedef enum
+{
+    openvino = 0,
+    onnx,
+    tensorflow,
+    pytorch,
+    tensorflowlite,
+    ggml,
+    autodetect,
+    unknown_backend,
+} graph_encoding;
 
-    // An execution graph for performing inference (i.e., a model).
-    typedef uint32_t graph;
+// Define where the graph should be executed.
+typedef enum execution_target
+{
+    cpu = 0,
+    gpu,
+    tpu
+} execution_target;
 
-    // sync up with
-    // https://github.com/WebAssembly/wasi-nn/blob/main/wit/wasi-nn.wit#L75
-    // Describes the encoding of the graph. This allows the API to be implemented by
-    // various backends that encode (i.e., serialize) their graph IR with different
-    // formats.
-    typedef enum
-    {
-        openvino = 0,
-        onnx,
-        tensorflow,
-        pytorch,
-        tensorflowlite,
-        ggml,
-        autodetect,
-        unknown_backend,
-    } graph_encoding;
+// Bind a `graph` to the input and output tensors for an inference.
+typedef uint32_t graph_execution_context;
 
-    // Define where the graph should be executed.
-    typedef enum execution_target
-    {
-        cpu = 0,
-        gpu,
-        tpu
-    } execution_target;
-
-    // Bind a `graph` to the input and output tensors for an inference.
-    typedef uint32_t graph_execution_context;
-
-#ifdef __cplusplus
-}
-#endif
 #endif
