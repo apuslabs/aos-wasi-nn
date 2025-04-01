@@ -8,7 +8,7 @@ AO_SQLITE_DIR := $(SCRIPT_DIR)/build/ao-sqlite
 AO_WASINN_DIR := $(SCRIPT_DIR)/build/ao-wasi-nn
 PROCESS_DIR := $(SCRIPT_DIR)/aos/process
 LIBS_DIR := $(PROCESS_DIR)/libs
-AO_IMAGE := p3rmaw3b/ao:0.1.5
+AO_IMAGE := p3rmaw3b/ao:dev
 EMXX_CFLAGS := -sMEMORY64=1 -O3 -msimd128 -fno-rtti -Wno-experimental
 
 local-model-server:
