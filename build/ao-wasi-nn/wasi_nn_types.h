@@ -84,6 +84,18 @@ typedef struct
     tensor_data data;
 } tensor;
 
+typedef struct {
+    uint32_t buf_offset;
+    uint32_t size;
+} tensor_dimensions_wasm;
+
+typedef struct {
+    tensor_dimensions_wasm dimensions;
+    tensor_type type;
+    uint32_t data_offset;
+    uint32_t data_size;
+} tensor_wasm;
+
 /**
  * GRAPH
  *

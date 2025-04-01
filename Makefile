@@ -93,7 +93,7 @@ build-sqlite: clean
 	# Copy the process module to the test-llm directory
 	cp $(PROCESS_DIR)/process.wasm $(SCRIPT_DIR)/tests/aos-sqlite.wasm
 	
-build-wasi-nn: clean
+build-aos-wasi-nn: clean
 	docker run -v $(AO_WASINN_DIR):/ao-wasi-nn $(AO_IMAGE) sh -c \
 		"cd /ao-wasi-nn && ./build.sh"
 	
@@ -116,3 +116,18 @@ build-wasi-nn: clean
 
 	# Copy the process module to the test-llm directory
 	cp $(PROCESS_DIR)/process.wasm $(SCRIPT_DIR)/tests/aos-wasi-nn.wasm
+	cp $(PROCESS_DIR)/process.wasm $(SCRIPT_DIR)/../HyperBEAM-Apus/test/aos-wasi-nn.wasm
+
+build-wasi-nn: clean
+	docker run -v $(AO_WASINN_DIR):/ao-wasi-nn $(AO_IMAGE) sh -c \
+		"cd /ao-wasi-nn && ./build_wasm.sh"
+		cp $(PROCESS_DIR)/process.wasm $(SCRIPT_DIR)/tests/wasi-nn.wasm
+		cp $(PROCESS_DIR)/process.wasm $(SCRIPT_DIR)/../HyperBEAM-Apus/test/wasi-nn.wasm
+
+build-aos-pure: clean
+	# Copy config.yml to the process directory
+	cp $(SCRIPT_DIR)/build/ao-pure-xs/config.yml $(PROCESS_DIR)/config.yml
+	cd $(PROCESS_DIR) && \
+		docker run -e DEBUG=1 --platform linux/amd64 -v ./:/src $(AO_IMAGE) ao-build-module
+		cp $(PROCESS_DIR)/process.wasm $(SCRIPT_DIR)/tests/apus-aos-pure.wasm
+		cp $(PROCESS_DIR)/process.wasm $(SCRIPT_DIR)/../HyperBEAM-Apus/test/apus-aos-pure.wasm

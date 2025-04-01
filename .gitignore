@@ -10,3 +10,4 @@ models
 **/*.wasm
 
 *wallet.json
+*.wat

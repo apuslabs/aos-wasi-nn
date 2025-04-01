@@ -64,7 +64,7 @@ init_execution_context(graph g, graph_execution_context *ctx);
  */
 __attribute__((import_module("wasi_ephemeral_nn")))
 wasi_nn_error
-set_input(graph_execution_context ctx, uint32_t index, tensor *tensor);
+set_input(graph_execution_context ctx, uint32_t index, tensor_wasm *tensor);
 
 /**
  * @brief Compute the inference on the given inputs.
@@ -92,6 +92,6 @@ compute(graph_execution_context ctx);
 __attribute__((import_module("wasi_ephemeral_nn")))
 wasi_nn_error
 get_output(graph_execution_context ctx, uint32_t index,
-           tensor_data output_tensor, uint32_t output_tensor_max_size, uint32_t *output_tensor_size);
+           tensor_data output_tensor, uint32_t *output_tensor_size);
 
 #endif

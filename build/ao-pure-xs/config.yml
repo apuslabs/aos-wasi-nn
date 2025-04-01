@@ -1,0 +1,16 @@
+target: 32
+extra_compile_args: [
+  "-sMEMORY64=0",
+  "-sFILESYSTEM=0",
+  "-sSTANDALONE_WASM=1",
+  "-sSUPPORT_LONGJMP=1",
+  "-fwasm-exceptions",
+  "-sABORT_ON_WASM_EXCEPTIONS=1",
+  "-sINVOKE_RUN=0",
+  "-sALLOW_MEMORY_GROWTH=0",
+  "-sDECLARE_ASM_MODULE_EXPORTS=0",
+  "-sDEFAULT_LIBRARY_FUNCS_TO_INCLUDE=[]",
+  "-sALLOW_UNIMPLEMENTED_SYSCALLS=1",
+  "-sERROR_ON_UNDEFINED_SYMBOLS=0",
+  "-Wl,--no-entry",
+]

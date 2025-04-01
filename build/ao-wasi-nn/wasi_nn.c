@@ -64,22 +64,21 @@ graph_init_execution_context(const Graph *graph, graph_execution_context ctx)
 }
 
 wasi_nn_error
-graph_set_input(graph_execution_context ctx, uint32_t index,
-                tensor_type type, const uint32_t *dims, uint32_t dims_count,
-                const void *data, size_t data_bytes)
+graph_set_input(graph_execution_context ctx, uint32_t index, const char *data)
 {
-    tensor_dimensions dimensions = {
-        .buf = (uint32_t *)dims,
-        .size = dims_count
-    };
+    uint32_t dimsbuf[1] = { 1 };
+    tensor_dimensions_wasm dims;
+    dims.buf_offset = (uint32_t)dimsbuf;
+    dims.size = 1;
 
-    tensor input_tensor = {
-        .dimensions = &dimensions,
-        .type = type,
-        .data = (const uint8_t*)data
-    };
+    tensor_wasm tensor;
+    tensor.dimensions = dims;
+    tensor.type = 4;
+    tensor.data_offset = (uint32_t)data;
+    tensor.data_size = strlen(data);
+    wasi_nn_error err = set_input(ctx, 0, &tensor);
 
-    return set_input(ctx, index, &input_tensor);
+    return err;
 }
 
 wasi_nn_error
@@ -90,9 +89,9 @@ graph_compute(graph_execution_context ctx)
 
 wasi_nn_error
 graph_get_output(graph_execution_context ctx, uint32_t index,
-                 void *output_data, uint32_t output_data_max_size, uint32_t *output_data_size)
+                 void *output_data, uint32_t *output_data_size)
 {
-    return get_output(ctx, index, (tensor_data)output_data, output_data_max_size, output_data_size);
+    return get_output(ctx, index, (tensor_data)output_data, output_data_size);
 }
 
 #define MAX_OUTPUT_BUFFER_SIZE (4096 * 6)
@@ -101,7 +100,7 @@ wasi_nn_error
 set_prompt_input(graph_execution_context ctx, const char* prompt)
 {
     uint32_t dims[1] = { 1 };
-    return graph_set_input(ctx, 0, 3, dims, 1, (const uint8_t*)prompt, strlen(prompt));
+    return graph_set_input(ctx, 0, prompt);
 }
 
 char*
@@ -113,7 +112,7 @@ get_result_output(graph_execution_context ctx, uint32_t index)
         return NULL;
     }
     uint32_t *output_size;
-    wasi_nn_error err = graph_get_output(ctx, index, output_buffer,MAX_OUTPUT_BUFFER_SIZE, &output_size);
+    wasi_nn_error err = graph_get_output(ctx, index, output_buffer, output_size);
     if (err != success) {
         fprintf(stderr, "graph_get_output failed with error: %d\n", err);
         free(output_buffer);
@@ -188,7 +187,7 @@ int lib_main()
     return 0;
 }
 
-uint16_t __wasi_clock_time_get(uint32_t clock_id, uint64_t precision, uint64_t *time) {
-    *time = 0;
-    return 0;
-}
+// uint16_t __wasi_clock_time_get(uint32_t clock_id, uint64_t precision, uint64_t *time) {
+//     *time = 0;
+//     return 0;
+// }

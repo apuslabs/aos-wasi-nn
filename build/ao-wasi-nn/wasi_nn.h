@@ -62,12 +62,9 @@ wasi_nn_error graph_init_execution_context(const Graph *graph, graph_execution_c
  * @param dims Array of dimensions
  * @param dims_count Number of dimensions
  * @param data Pointer to input data
- * @param data_bytes Size of input data in bytes
  * @return wasi_nn_error Error code
  */
-wasi_nn_error graph_set_input(graph_execution_context ctx, uint32_t index,
-                             tensor_type type, const uint32_t *dims, uint32_t dims_count,
-                             const void *data, size_t data_bytes);
+wasi_nn_error graph_set_input(graph_execution_context ctx, uint32_t index, const char *data);
 
 /**
  * @brief Compute inference using the execution context
