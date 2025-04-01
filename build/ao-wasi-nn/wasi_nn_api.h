@@ -94,4 +94,13 @@ wasi_nn_error
 get_output(graph_execution_context ctx, uint32_t index,
            tensor_data output_tensor, uint32_t *output_tensor_size);
 
+
+
+__attribute__((import_module("wasi_ephemeral_nn")))
+wasi_nn_error
+run_inference(const char *prompt, uint32_t prompt_len);
+
 #endif
+
+
+

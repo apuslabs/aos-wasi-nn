@@ -119,7 +119,7 @@ char* get_result_output(graph_execution_context ctx, uint32_t index);
  * @param input_prompt Input prompt for inference
  * @return char* Result string (caller must free)
  */
-char *run_inference(const char *model_path, const char *input_prompt);
+char *lib_run_inference(const char *model_path, const char *input_prompt);
 
 void logtest(char full_prompt[4096]);
 

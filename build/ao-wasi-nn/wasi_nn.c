@@ -122,7 +122,7 @@ get_result_output(graph_execution_context ctx, uint32_t index)
 }
 
 char*
-run_inference(const char* model_path, const char* input_prompt)
+lib_run_inference(const char* model_path, const char* input_prompt)
 {
     wasi_nn_error err;
     GraphBuilder builder = graph_builder_new(ggml, gpu);
@@ -180,10 +180,9 @@ run_inference(const char* model_path, const char* input_prompt)
 
 int lib_main()
 {
-    char* result = run_inference("/home/jax/work/WasmEdge-WASINN-examples/wasmedge-ggml/qwen/src/qwen1_5-0_5b-chat-q2_k.gguf", "What is the meaning of life?");
-    if (result) {
-        free(result);
-    }
+    char *prompt = "What is the meaning of life?";
+    wasi_nn_error result = run_inference(prompt, strlen(prompt));
+    printf("Result: %d\n", result);
     return 0;
 }
 
