@@ -180,7 +180,7 @@ lib_run_inference(const char* model_path, const char* input_prompt)
 
 uint32_t lib_main()
 {
-    char *prompt = "What is the meaning of life?";
+    char *prompt = "<|im_start|>user\nWhat's the meaning of Life? Answer me in 10 words<|im_end|>\n<|im_start|>assistant\n";
     uint32_t result = run_inference(prompt, strlen(prompt));
     // printf("Result: %d\n", result);
     return result;
