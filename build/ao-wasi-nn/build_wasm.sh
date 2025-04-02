@@ -1,17 +1,11 @@
 emcc -O3 -g2 \
      -s STANDALONE_WASM=1 \
+     -s PURE_WASI=1 \
+     -s ALLOW_MEMORY_GROWTH=1 \
+     -s ALLOW_TABLE_GROWTH=1 \
      -s ERROR_ON_UNDEFINED_SYMBOLS=0 \
-     -s EXPORTED_FUNCTIONS=[\"_lib_main\"] \
+     -s ALLOW_UNIMPLEMENTED_SYSCALLS=1 \
+     -s EXPORTED_FUNCTIONS=[\"_lib_main\",\"_malloc\",\"_free\"] \
      -Wl,--no-entry \
      -o process.wasm \
      wasi_nn.c
-
-# /opt/wasi-sdk/bin/clang \
-#     --target=wasm32-wasi \
-#     -DNN_LOG_LEVEL=1 \
-#     -Wl,--allow-undefined \
-#     -I./wasi_nn_types.h \
-#     -I./wasi_nn_api.h \
-#     -I./wasi_nn.h \
-#     -o process.wasm \
-#     wasi_nn.c

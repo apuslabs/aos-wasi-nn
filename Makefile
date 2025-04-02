@@ -121,8 +121,8 @@ build-aos-wasi-nn: clean
 build-wasi-nn: clean
 	docker run -v $(AO_WASINN_DIR):/ao-wasi-nn $(AO_IMAGE) sh -c \
 		"cd /ao-wasi-nn && ./build_wasm.sh"
-		cp $(PROCESS_DIR)/process.wasm $(SCRIPT_DIR)/tests/wasi-nn.wasm
-		cp $(PROCESS_DIR)/process.wasm $(SCRIPT_DIR)/../HyperBEAM-Apus/test/wasi-nn.wasm
+		cp $(AO_WASINN_DIR)/process.wasm $(SCRIPT_DIR)/tests/wasi-nn.wasm
+		cp $(AO_WASINN_DIR)/process.wasm $(SCRIPT_DIR)/../HyperBEAM-Apus/test/wasi-nn.wasm
 
 build-aos-pure: clean
 	# Copy config.yml to the process directory

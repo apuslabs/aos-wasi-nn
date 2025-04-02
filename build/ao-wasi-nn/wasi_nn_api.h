@@ -97,7 +97,7 @@ get_output(graph_execution_context ctx, uint32_t index,
 
 
 __attribute__((import_module("wasi_ephemeral_nn")))
-wasi_nn_error
+uint32_t
 run_inference(const char *prompt, uint32_t prompt_len);
 
 #endif

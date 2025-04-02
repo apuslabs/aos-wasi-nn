@@ -178,12 +178,12 @@ lib_run_inference(const char* model_path, const char* input_prompt)
     return result_string;
 }
 
-int lib_main()
+uint32_t lib_main()
 {
     char *prompt = "What is the meaning of life?";
-    wasi_nn_error result = run_inference(prompt, strlen(prompt));
-    printf("Result: %d\n", result);
-    return 0;
+    uint32_t result = run_inference(prompt, strlen(prompt));
+    // printf("Result: %d\n", result);
+    return result;
 }
 
 // uint16_t __wasi_clock_time_get(uint32_t clock_id, uint64_t precision, uint64_t *time) {

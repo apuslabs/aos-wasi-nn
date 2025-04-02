@@ -123,6 +123,6 @@ char *lib_run_inference(const char *model_path, const char *input_prompt);
 
 void logtest(char full_prompt[4096]);
 
-extern int lib_main();
+extern uint32_t lib_main();
 
 #endif /* WASI_NN_API_H */
