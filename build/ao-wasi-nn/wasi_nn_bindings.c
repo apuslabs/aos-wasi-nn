@@ -11,7 +11,7 @@ static int l_wasi_nn_run_inference(lua_State *L) {
     const char *model_path = luaL_checkstring(L, 1);
     const char *input_prompt = luaL_checkstring(L, 2);
     
-    char *result = run_inference(model_path, input_prompt);
+    char *result = lib_run_inference(model_path, input_prompt);
     
     if (result != NULL) {
         lua_pushstring(L, result);

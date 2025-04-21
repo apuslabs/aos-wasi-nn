@@ -11,3 +11,4 @@ models
 
 *wallet.json
 *.wat
+*.gguf

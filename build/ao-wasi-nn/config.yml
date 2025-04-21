@@ -3,10 +3,12 @@ initial_memory: 1258291200
 maximum_memory: 10485760000
 target: 32
 extra_compile_args: [
+  "-sWASM=1",
   "-sMEMORY64=0",
   "-sSTANDALONE_WASM=1",
   "-sPURE_WASI=1",
-  "-sSUPPORT_LONGJMP=0",
+  "-fwasm-exceptions",
+  "-sFORCE_FILESYSTEM=1",
   "-sINVOKE_RUN=0",
   "-sALLOW_UNIMPLEMENTED_SYSCALLS=1",
   "-sERROR_ON_UNDEFINED_SYMBOLS=0"

@@ -121,72 +121,26 @@ get_result_output(graph_execution_context ctx, uint32_t index)
     return (char*)output_buffer;
 }
 
-char*
-lib_run_inference(const char* model_path, const char* input_prompt)
+uint32_t handle()
 {
-    wasi_nn_error err;
+    char *prompt = "<|im_start|>user\nWhat's the meaning of Life? Answer me in 10 words<|im_end|>\n<|im_start|>assistant\n";
+
+    const char *model_path = "mock_model_path";
+    const char *config = "mock_config";
     GraphBuilder builder = graph_builder_new(ggml, gpu);
     Graph graph;
-    err = graph_build_from_cache(&builder, model_path, &graph);
+    graph_builder_config(&builder, config);
+    wasi_nn_error err = graph_build_from_cache(&builder, model_path, &graph);
     if (err != success) {
-        fprintf(stderr, "graph_build_from_cache failed: %d\n", err);
-        return NULL;
+        return 101; // Return 0 to indicate failure
     }
+
     graph_execution_context ctx;
     err = init_execution_context(graph.handle, &ctx);
     if (err != success) {
-        fprintf(stderr, "init_execution_context failed: %d\n", err);
-        return NULL;
+        return 102; // Return 0 to indicate failure
     }
-    char full_prompt[4096];
-    snprintf(full_prompt, sizeof(full_prompt),
-             "<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n\n"
-             "<|im_start|>user\n%s<|im_end|>\n<|im_start|>assistant\n",
-             input_prompt);
-    err = set_prompt_input(ctx, full_prompt);
-    if (err != success) {
-        fprintf(stderr, "set_prompt_input failed: %d\n", err);
-        return NULL;
-    }
-    err = graph_compute(ctx);
-    if (err != success) {
-        if (err == context_full) {
-            printf("[INFO] context full, reset required.\n");
-        } else if (err == prompt_tool_long) {
-            printf("[INFO] prompt too long, reset required.\n");
-        } else if (err == model_not_found) {
-            printf("[INFO] model not found, reset required.\n");
-        } else {
-            fprintf(stderr, "[ERROR] graph_compute failed: %d\n", err);
-            return NULL;
-        }
-    }
-    char *result_string = get_result_output(ctx, 0);
-    if (result_string == NULL) {
-        fprintf(stderr, "get_result_output failed\n");
-        return NULL;
-    } else {
-        printf("Model inference returned: %s\n", result_string);
-    }
-    // char *result_string2 = get_result_output(ctx, 1);
-    // if (result_string2 == NULL) {
-    //     fprintf(stderr, "get_result_output failed\n");
-    //     return NULL;
-    // } else {
-    //     printf("Model inference params returned: %s\n", result_string2);
-    // }
-    return result_string;
-}
 
-uint32_t lib_main()
-{
-    char *prompt = "<|im_start|>user\nWhat's the meaning of Life? Answer me in 10 words<|im_end|>\n<|im_start|>assistant\n";
     uint32_t result = run_inference(prompt, strlen(prompt));
-    // printf("Result: %d\n", result);
     return result;
 }
-
-// uint16_t __wasi_clock_time_get(uint32_t clock_id, uint64_t precision, uint64_t *time) {
-//     *time = 0;
-//     return 0;
-// }
