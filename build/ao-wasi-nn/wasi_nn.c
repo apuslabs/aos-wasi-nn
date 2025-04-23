@@ -121,12 +121,8 @@ get_result_output(graph_execution_context ctx, uint32_t index)
     return (char*)output_buffer;
 }
 
-uint32_t handle()
-{
-    char *prompt = "<|im_start|>user\nWhat's the meaning of Life? Answer me in 10 words<|im_end|>\n<|im_start|>assistant\n";
-
+uint32_t handle(const char *prompt, const char *config) {
     const char *model_path = "mock_model_path";
-    const char *config = "mock_config";
     GraphBuilder builder = graph_builder_new(ggml, gpu);
     Graph graph;
     graph_builder_config(&builder, config);
